@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#161310">
+<meta name="description" content="吃灰博物馆——把你买错的垃圾陈列成永久藏品，让这面越来越灰的墙替你劝住下一次手痒。参观免费，教训自付。">
+<meta property="og:title" content="吃灰博物馆">
+<meta property="og:description" content="把你买错的垃圾陈列成永久藏品。参观免费，教训自付。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23161310'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23c9a25e' font-family='Georgia'%3E灰%3C/text%3E%3C/svg%3E">
+<title>吃灰博物馆 · 每一件垃圾，都曾是你心动的样子</title>
+<style>
+:root{
+  --bg:#f5f2ea; --wall:#efeadd; --card:#fffdf7; --ink:#26221a; --ink2:#5c564a; --ink3:#8d8778;
+  --line:#e0d9c6; --deep:#161310; --deep2:#242019; --gold:#c9a25e; --gold-dim:#a3834c;
+  --red:#a63a2e; --green:#5c7a3a; --amber:#b98a2f;
+  --num:'Georgia','Times New Roman',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',sans-serif;
+  font-size:15px;line-height:1.6;max-width:520px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+input,select{font-family:inherit;font-size:16px}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- 门头 ---------- */
+header{background:var(--deep);color:#efe6d2;padding:34px 22px 26px;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:340px;height:120px;
+  background:radial-gradient(ellipse at center,rgba(201,162,94,.18),transparent 70%);pointer-events:none}
+.museum-no{font-size:11px;letter-spacing:3px;color:var(--gold-dim);text-transform:uppercase}
+.museum-name{font-family:var(--num);font-size:30px;font-weight:400;letter-spacing:8px;margin-top:4px}
+.museum-sub{font-size:12px;color:#9c917c;margin-top:6px;letter-spacing:1px}
+.closed-tag{display:inline-block;border:1px solid var(--gold-dim);color:var(--gold);font-size:11px;
+  padding:2px 10px;letter-spacing:2px;border-radius:2px;margin-bottom:10px}
+.hero-num-label{margin-top:24px;font-size:12px;color:#9c917c;display:flex;align-items:center;gap:8px}
+.hero-num-label::after{content:'';flex:1;height:1px;background:rgba(201,162,94,.25)}
+.hero-num{font-family:var(--num);font-size:52px;line-height:1.15;color:#f3e9d0;letter-spacing:1px}
+.hero-num .cur{font-size:26px;color:var(--gold);margin-right:2px}
+.hero-pain{margin-top:10px;font-size:12.5px;color:#b3a88e;line-height:1.7}
+.hero-pain b{color:#e8d9b0;font-weight:500}
+.hero-meta{margin-top:14px;display:flex;gap:14px;font-size:11.5px;color:#8d8471;flex-wrap:wrap}
+.hero-meta span{display:flex;align-items:center;gap:5px}
+.hero-meta i{width:6px;height:6px;border-radius:50%;background:var(--gold-dim);flex:none}
+
+/* ---------- 报告横滑条 ---------- */
+.report-strip{display:flex;gap:10px;overflow-x:auto;padding:16px 16px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.report-strip::-webkit-scrollbar{display:none}
+.rp-card{flex:none;width:132px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.rp-card .v{font-family:var(--num);font-size:22px;color:var(--ink);line-height:1.2}
+.rp-card .v small{font-size:12px;color:var(--ink3);font-weight:400}
+.rp-card .k{font-size:11px;color:var(--ink3);margin-top:3px;line-height:1.45}
+.rp-card.hot .v{color:var(--red)}
+
+/* ---------- 展厅导航 ---------- */
+.halls{padding:14px 16px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.halls::-webkit-scrollbar{display:none}
+.hall-tab{flex:none;padding:7px 14px;border-radius:18px;border:1px solid var(--line);background:var(--card);
+  font-size:12.5px;color:var(--ink2);transition:all .2s}
+.hall-tab .n{font-family:var(--num);font-size:11px;color:var(--ink3);margin-left:3px}
+.hall-tab.on{background:var(--deep);border-color:var(--deep);color:#efe6d2}
+.hall-tab.on .n{color:var(--gold)}
+
+/* ---------- 展厅标题 ---------- */
+.hall-head{padding:18px 20px 4px}
+.hall-head .t{font-family:var(--num);font-size:19px;letter-spacing:2px}
+.hall-head .t::before{content:'§ ';color:var(--gold);font-size:15px}
+.hall-head .curatorial{font-size:12.5px;color:var(--ink3);margin-top:2px;font-style:normal;line-height:1.7}
+.hall-head .curatorial::before{content:'策展人按语 —— ';color:var(--gold-dim);font-style:normal}
+
+/* ---------- 展品墙 ---------- */
+.wall{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px 8px}
+.piece{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  transition:transform .15s;position:relative;animation:fadeUp .4s both}
+.piece:active{transform:scale(.97)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ph{aspect-ratio:1/1;overflow:hidden;position:relative;background:var(--wall)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .crown,.ph .sealed{position:absolute;top:8px;left:8px;font-size:10px;letter-spacing:1px;
+  padding:2px 8px;border-radius:2px;color:#fff;background:var(--gold);z-index:2}
+.ph .sealed{background:var(--red)}
+.piece .tag{padding:10px 12px 12px}
+.piece .tag .nm{font-size:14px;font-weight:500;display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.piece .tag .nm .pr{font-family:var(--num);font-weight:400;color:var(--ink2);flex:none}
+.piece .tag .meta{font-size:11px;color:var(--ink3);margin-top:3px}
+.piece .tag .why{font-size:11.5px;color:var(--ink2);margin-top:5px;line-height:1.5;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty-hall{grid-column:1/-1;text-align:center;padding:44px 20px;color:var(--ink3);font-size:13px;
+  border:1px dashed var(--line);border-radius:12px;line-height:2}
+.empty-hall .big{font-family:var(--num);font-size:17px;color:var(--ink2);letter-spacing:2px}
+
+/* ---------- 镇馆之宝横幅位 ---------- */
+.treasure{margin:6px 16px 0;background:linear-gradient(135deg,var(--deep2),#332b1d);border-radius:12px;
+  padding:16px 18px;color:#efe6d2;display:flex;gap:14px;align-items:center;position:relative;overflow:hidden}
+.treasure::after{content:'镇馆之宝';position:absolute;right:-8px;top:10px;transform:rotate(35deg);
+  font-size:10px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold-dim);padding:2px 26px;opacity:.85}
+.treasure .th{width:64px;height:64px;border-radius:8px;object-fit:cover;filter:grayscale(.7) brightness(.85);
+  border:1px solid var(--gold-dim);flex:none}
+.treasure .tt .a{font-size:15px;font-weight:500}
+.treasure .tt .b{font-size:12px;color:#b3a88e;margin-top:3px;line-height:1.6}
+.treasure .tt .b em{font-style:normal;color:var(--gold);font-family:var(--num)}
+
+/* ---------- 底部动作栏 ---------- */
+.dock{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:50;
+  padding:10px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(transparent,var(--bg) 30%)}
+.dock-in{display:flex;gap:10px}
+.btn{flex:1;padding:14px 0;border-radius:12px;font-size:15px;font-weight:500;text-align:center;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-donate{background:var(--deep);color:#efe6d2;letter-spacing:2px}
+.btn-help{flex:none;width:112px;background:var(--card);border:1px solid var(--line);color:var(--ink2);font-size:13.5px;font-weight:400}
+.btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--ink2)}
+.btn-line{background:transparent;border:1px solid var(--deep);color:var(--ink)}
+.btn-red{background:var(--red);color:#fff}
+
+/* ---------- sheet 遮罩与面板 ---------- */
+.mask{position:fixed;inset:0;background:rgba(22,19,16,.55);z-index:90;opacity:0;transition:opacity .25s;pointer-events:none}
+.mask.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:95;
+  background:var(--card);border-radius:20px 20px 0 0;transform:translateY(105%);transition:transform .3s cubic-bezier(.32,.72,.29,1);
+  max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.sheet.show{transform:translateY(0)}
+.sheet-head{padding:16px 20px 8px;display:flex;justify-content:space-between;align-items:center;flex:none}
+.sheet-head .t{font-size:16px;font-weight:500;letter-spacing:1px}
+.sheet-head .x{font-size:13px;color:var(--ink3);padding:4px 8px}
+.sheet-body{padding:6px 20px 26px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:10px auto 0}
+
+/* ---------- 表单 ---------- */
+.f-lb{font-size:12.5px;color:var(--ink2);margin:16px 0 8px;display:flex;justify-content:space-between}
+.f-lb em{font-style:normal;color:var(--ink3);font-size:11.5px}
+.photo-pick{border:1.5px dashed var(--gold-dim);border-radius:12px;background:var(--wall);
+  aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  color:var(--ink3);font-size:13px;overflow:hidden;position:relative;width:100%}
+.photo-pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-pick .ph-ico{width:40px;height:40px;border:1.5px solid var(--gold-dim);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold-dim);font-weight:300}
+.f-input{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff;
+  outline:none;transition:border .2s}
+.f-input:focus{border-color:var(--gold)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:#fff;font-size:13px;color:var(--ink2);transition:all .15s}
+.chip-new{border-style:dashed;color:var(--gold-dim)}
+.chip.on{background:var(--deep);border-color:var(--deep);color:#efe6d2}
+.seg{display:flex;gap:8px}
+.seg .chip{flex:1;text-align:center;padding:10px 0}
+.f-note{font-size:11.5px;color:var(--ink3);margin-top:8px;line-height:1.6}
+.donate-go{margin-top:22px;width:100%;padding:15px 0;border-radius:12px;background:var(--red);color:#fff;
+  font-size:15.5px;letter-spacing:3px}
+.donate-go:disabled{background:var(--line);color:#a49d8d}
+.registering{position:fixed;inset:0;z-index:120;background:rgba(22,19,16,.92);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#d8cba8}
+.reg-ring{width:54px;height:54px;border:2px solid rgba(201,162,94,.25);border-top-color:var(--gold);
+  border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.reg-txt{font-size:13px;letter-spacing:3px}
+
+/* ---------- 展柜（特写） ---------- */
+.case{position:fixed;inset:0;z-index:60;background:var(--deep);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,.29,1)}
+.case.show{transform:translateY(0)}
+.case-close{position:absolute;top:14px;right:16px;z-index:5;color:#9c917c;font-size:13px;
+  padding:6px 10px;letter-spacing:1px}
+.spot{padding:52px 30px 24px;display:flex;justify-content:center;background:
+  radial-gradient(ellipse 65% 42% at 50% 30%,rgba(201,162,94,.16),transparent)}
+.frame{background:#efe6d2;padding:10px;border-radius:2px;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  border:1px solid #3a3122;position:relative;max-width:340px;width:100%}
+.frame img{width:100%;display:block;aspect-ratio:1/1;object-fit:cover}
+.seal{position:absolute;right:-16px;bottom:-16px;width:64px;height:64px;border-radius:50%;
+  border:2px solid var(--red);display:flex;align-items:center;justify-content:center;
+  background:rgba(245,242,234,.9);transform:rotate(-14deg)}
+.seal span{font-family:var(--num);font-size:26px;color:var(--red)}
+.plaque{background:#f3ecd9;margin:0 24px;padding:18px 22px;border:1px solid #3a3122;position:relative;margin-top:-6px}
+.plaque .p1{font-family:var(--num);font-size:17px;letter-spacing:1px}
+.plaque .p2{font-size:12.5px;color:var(--ink2);margin-top:5px;font-style:italic}
+.plaque .p3{font-size:12.5px;color:var(--ink);margin-top:8px}
+.plaque .p4{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.plaque .p5{font-size:10px;letter-spacing:2px;color:var(--ink3);margin-top:9px;font-family:var(--num)}
+.case-meta{padding:18px 34px 6px;color:#cfc4a8;font-size:12.5px;line-height:1.9}
+.case-meta b{color:#efe6d2;font-weight:500}
+.case-meta .pain{color:#d9a05a}
+.case-ethic{margin:14px 24px 0;padding:10px 14px;border:1px dashed #4a4130;color:#8d8471;
+  font-size:11px;line-height:1.8;border-radius:6px}
+.case-acts{display:flex;gap:10px;padding:18px 24px calc(26px + env(safe-area-inset-bottom))}
+.case-acts .btn{padding:13px 0;font-size:14px}
+.case-acts .btn-donate{letter-spacing:1px}
+
+/* ---------- 急救 ---------- */
+.aid-nums{display:flex;flex-direction:column;gap:0;margin:6px 0 4px}
+.aid-row{display:flex;justify-content:space-between;align-items:baseline;padding:13px 2px;border-bottom:1px dashed var(--line)}
+.aid-row .k{font-size:13.5px;color:var(--ink2)}
+.aid-row .v{font-family:var(--num);font-size:21px}
+.aid-row .v small{font-size:12px;color:var(--ink3)}
+.aid-quote{margin-top:14px;font-size:13px;color:var(--ink2);line-height:1.9;background:var(--wall);
+  border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 8px 8px 0}
+.aid-acts{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+
+/* ---------- 报告 ---------- */
+.chart{margin:8px 0 4px}
+.bar-row{margin-bottom:12px}
+.bar-row .bl{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-bottom:5px}
+.bar-row .bl b{font-weight:500;font-family:var(--num);font-size:13px}
+.bar{height:9px;background:var(--wall);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--gold-dim),var(--gold));
+  width:0;transition:width .8s cubic-bezier(.22,.8,.3,1)}
+.bar i.r{background:linear-gradient(90deg,#8d4a3a,var(--red))}
+.anc{margin-top:18px;background:var(--deep);color:#efe6d2;border-radius:12px;padding:18px 20px;text-align:center}
+.anc .a1{font-size:12px;color:#9c917c}
+.anc .a2{font-family:var(--num);font-size:24px;margin-top:6px}
+.anc .a3{font-size:11.5px;color:#b3a88e;margin-top:6px}
+.best{margin-top:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.best .bh{background:var(--wall);padding:8px 14px;font-size:11.5px;letter-spacing:2px;color:var(--ink2)}
+.best .bb{padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.best .bb+.bb{border-top:1px dashed var(--line)}
+.best .bn{font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.best .bv{font-family:var(--num);font-size:16px;color:var(--red);flex:none}
+
+/* ---------- 门票 ---------- */
+.ticket-wrap{display:flex;flex-direction:column;align-items:center;padding:6px 0 10px}
+.ticket-wrap canvas{width:100%;max-width:340px;height:auto;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.tk-acts{display:flex;gap:10px;width:100%;margin-top:16px}
+.linkish{font-size:11.5px;color:var(--ink3);text-decoration:underline;text-align:center;margin-top:10px}
+
+/* ---------- 导览 modal / 馆长致辞 ---------- */
+.guide-pg{min-height:300px;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:10px 8px}
+.guide-pg .gk{font-size:11px;letter-spacing:4px;color:var(--gold-dim);margin-bottom:14px}
+.guide-pg .gt{font-family:var(--num);font-size:21px;letter-spacing:2px;line-height:1.7}
+.guide-pg .gd{font-size:13px;color:var(--ink2);margin-top:14px;line-height:2;text-align:left}
+.guide-dots{display:flex;justify-content:center;gap:6px;margin:12px 0 4px}
+.guide-dots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:background .2s}
+.guide-dots i.on{background:var(--gold)}
+.guide-acts{display:flex;gap:10px;margin-top:8px}
+
+/* ---------- 设置 ---------- */
+.set-row{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;border-bottom:1px dashed var(--line);font-size:14px}
+.set-row .r{color:var(--ink3);font-size:12.5px}
+.set-row button{color:var(--ink);text-decoration:underline;font-size:13px}
+.set-in{width:120px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;text-align:right}
+
+/* ---------- 徽标 ---------- */
+.demo-badge{position:fixed;top:10px;right:10px;z-index:55;background:var(--red);color:#fff;
+  font-size:11px;padding:5px 10px;border-radius:14px;letter-spacing:1px}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);z-index:130;
+  background:rgba(22,19,16,.92);color:#efe6d2;font-size:13px;padding:10px 20px;border-radius:20px;
+  opacity:0;transition:all .3s;pointer-events:none;letter-spacing:1px;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.flineseq{margin-top:8px;display:flex;justify-content:center;align-items:center;gap:2px;flex-wrap:wrap}
+.flink{color:var(--ink2);text-decoration:underline;font-size:11px;padding:2px 4px}
+.upd-bar{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:80;
+  background:var(--gold);color:#161310;font-size:12.5px;font-weight:500;text-align:center;
+  padding:9px 12px;letter-spacing:1px;cursor:pointer}
+.cl-v{margin-bottom:18px}
+.cl-v .cl-h{font-family:var(--num);font-size:16px;color:var(--ink)}
+.cl-v .cl-h span{font-size:11.5px;color:var(--ink3);margin-left:8px}
+.cl-v ul{margin:8px 0 0 18px}
+.cl-v li{font-size:13px;color:var(--ink2);line-height:1.9}
+.ticket-wrap img.tkimg{width:100%;max-width:340px;height:auto;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+footer{padding:30px 20px calc(110px + env(safe-area-inset-bottom));text-align:center;color:var(--ink3);font-size:11px;line-height:2}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1 class="sr">吃灰博物馆——把你买错的垃圾陈列成永久藏品，劝住下一次手痒</h1>
+
+<header>
+  <div id="closedTag" class="closed-tag hidden">闭 馆 中 · 去 睡 吧 ，你 的 垃 圾 跑 不 掉</div>
+  <div class="museum-no" id="museumNo">DUST MUSEUM · NO.001</div>
+  <div class="museum-name">吃灰博物馆</div>
+  <div class="museum-sub" id="museumSub">每一件垃圾，都曾是你心动的样子</div>
+  <div class="hero-num-label">开馆至今，你为吃灰支付了</div>
+  <div class="hero-num"><span class="cur">¥</span><span id="heroNum">0</span></div>
+  <div class="hero-pain" id="heroPain">馆藏虚位以待。<br>第一件展品，由你亲自捐赠。</div>
+  <div class="hero-meta" id="heroMeta"></div>
+</header>
+
+<div id="demoBadge" class="demo-badge hidden">演示数据 · 退出</div>
+<div id="updBar" class="upd-bar hidden">本馆已翻新至新版本 · 点此刷新</div>
+
+<div class="report-strip" id="reportStrip"></div>
+
+<nav class="halls" id="hallTabs"></nav>
+
+<section id="treasureSlot"></section>
+<div class="hall-head" id="hallHead"></div>
+<main class="wall" id="wall"></main>
+
+<footer id="foot">
+  <div>数据只存在你的手机里 · 单设备使用 · 本馆藏品概不出馆</div>
+  <div class="flineseq"><button class="flink" id="lnkGuide">使用说明</button>·<button class="flink" id="lnkDemo">演示馆藏</button>·<button class="flink" id="lnkChlog">更新公告</button>·<button class="flink" id="lnkAdmin">馆长办公室</button></div>
+  <div>参观免费，教训自付</div>
+</footer>
+
+<div class="dock"><div class="dock-in">
+  <button class="btn btn-donate" id="btnDonate">捐 赠 一 件</button>
+  <button class="btn btn-help" id="btnAid">手痒急救</button>
+</div></div>
+
+<!-- 捐赠表单 -->
+<div class="mask" id="donateMask"></div>
+<div class="sheet" id="donateSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">藏品入馆登记</span><button class="x" id="donateClose">关闭</button></div>
+  <div class="sheet-body">
+    <label class="photo-pick" id="photoPick">
+      <input type="file" accept="image/*" id="photoInput" class="sr">
+      <div class="ph-ico">+</div>
+      <div id="photoHint">拍摄或选择它的照片</div>
+    </label>
+    <div class="f-lb">藏品名称<em>≤12 字</em></div>
+    <input class="f-input" id="fName" maxlength="12" placeholder="例如：瑜伽垫 / vlog 相机">
+    <div class="f-lb">入手价格<em>¥</em></div>
+    <input class="f-input" id="fPrice" type="number" inputmode="decimal" min="0" placeholder="当时花了多少">
+    <div class="f-lb">类别<em>可自己新增</em></div>
+    <div class="chips" id="fCat"></div>
+    <input class="f-input hidden" id="fCatNew" maxlength="6" placeholder="新类别名（≤6 字），回车确认">
+    <div class="f-lb">当时为啥买<em>决定它的捐赠人署名 · 可自己新增</em></div>
+    <div class="chips" id="fWhy"></div>
+    <input class="f-input hidden" id="fWhyNew" maxlength="6" placeholder="新原因（≤6 字），回车确认">
+    <div class="f-lb">入馆前用过几次<em>0 = 原封未拆</em></div>
+    <input class="f-input" id="fUses" type="number" inputmode="numeric" min="0" placeholder="老实交代">
+    <div class="f-lb">什么时候买的</div>
+    <div class="seg" id="fWhen"></div>
+    <input class="f-input hidden" id="fWhenMonth" inputmode="numeric" maxlength="7" placeholder="大约哪个月？如 2025-06，回车确认">
+    <div class="f-note">入馆即终审：依据本馆修复伦理，藏品保留历史原貌，概不退换、概不出馆。</div>
+    <button class="donate-go" id="donateGo" disabled>签 署 捐 赠</button>
+  </div>
+</div>
+
+<!-- 展柜特写 -->
+<div class="case" id="case">
+  <button class="case-close" id="caseClose">退出展柜 ✕</button>
+  <div class="spot"><div class="frame"><img id="caseImg" alt="藏品特写">
+    <div class="seal"><span>灰</span></div></div></div>
+  <div class="plaque">
+    <div class="p1" id="cp1"></div><div class="p2" id="cp2"></div>
+    <div class="p3" id="cp3"></div><div class="p4" id="cp4"></div>
+    <div class="p5" id="cp5"></div>
+  </div>
+  <div class="case-meta" id="caseMeta"></div>
+  <div class="case-ethic">依据本馆修复伦理，本藏品保留历史原貌，不做任何修复，亦不受理赎回申请。它在这里很好——曾经。</div>
+  <div class="case-acts">
+    <button class="btn btn-ghost" id="casePost">制成明信片</button>
+    <button class="btn btn-donate" id="caseTicket">收藏馆票</button>
+  </div>
+</div>
+
+<!-- 急救 -->
+<div class="mask" id="aidMask"></div>
+<div class="sheet" id="aidSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">手痒急救室</span><button class="x" id="aidClose">关闭</button></div>
+  <div class="sheet-body">
+    <div class="aid-nums" id="aidNums"></div>
+    <div class="aid-quote" id="aidQuote"></div>
+    <div class="aid-acts">
+      <button class="btn btn-red" id="aidResist">算了 · 记一次拦截</button>
+      <button class="btn btn-ghost" id="aidBuy">还是想买</button>
+    </div>
+  </div>
+</div>
+
+<!-- 报告 -->
+<div class="mask" id="rpMask"></div>
+<div class="sheet" id="rpSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">策展报告</span><button class="x" id="rpClose">关闭</button></div>
+  <div class="sheet-body" id="rpBody"></div>
+</div>
+
+<!-- 门票 -->
+<div class="mask" id="tkMask"></div>
+<div class="sheet" id="tkSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">本馆门票</span><button class="x" id="tkClose">关闭</button></div>
+  <div class="sheet-body">
+    <div class="ticket-wrap"><canvas id="tkCanvas" width="750" height="944"></canvas><img id="tkImg" class="tkimg hidden" alt="门票图片，长按可保存">
+      <div class="tk-acts">
+        <button class="btn btn-ghost" id="tkRegen">换一张</button>
+        <button class="btn btn-donate" id="tkSave">保存图片</button>
+      </div>
+      <div class="linkish">长按或保存后分享 · #WorkBuddy #1024程序员节</div>
+    </div>
+  </div>
+</div>
+
+<!-- 首访引导 / 馆长致辞 -->
+<div class="mask" id="gdMask"></div>
+<div class="sheet" id="gdSheet">
+  <div class="grab"></div>
+  <div class="sheet-body" style="padding-bottom:20px">
+    <div class="guide-pg" id="gdPage"></div>
+    <div class="guide-dots" id="gdDots"></div>
+    <div class="guide-acts" id="gdActs"></div>
+  </div>
+</div>
+
+<!-- 更新公告 -->
+<div class="mask" id="clMask"></div>
+<div class="sheet" id="clSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">更新公告</span><button class="x" id="clClose">关闭</button></div>
+  <div class="sheet-body" id="clBody"></div>
+</div>
+
+<!-- 设置 -->
+<div class="mask" id="stMask"></div>
+<div class="sheet" id="stSheet">
+  <div class="grab"></div>
+  <div class="sheet-head"><span class="t">馆长办公室</span><button class="x" id="stClose">关闭</button></div>
+  <div class="sheet-body">
+    <div class="set-row"><span>月薪（用于生命换算）</span>
+      <input class="set-in" id="stIncome" type="number" inputmode="numeric" placeholder="¥"></div>
+    <div class="set-row"><span>时薪</span><span class="r" id="stHourly">—</span></div>
+    <div class="set-row"><span>版本</span><span class="r"><span id="stVer">—</span> · <button id="stChlog">更新公告</button> · <button id="stChk">检查更新</button></span></div>
+    <div class="set-row"><span>导出数据</span><button id="stExport">复制 JSON</button></div>
+    <div class="set-row"><span>清空重建</span><button id="stReset">清空馆藏</button></div>
+    <div class="f-note">时薪 = 月薪 ÷ 176h（22 天 × 8 小时）。涉案金额 ÷ 时薪 = 你为之上班的天数。</div>
+  </div>
+</div>
+
+<div class="registering hidden" id="registering">
+  <div class="reg-ring"></div><div class="reg-txt">正在登记藏品 …</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<input type="file" accept="image/*" id="ioFile" class="hidden">
+
+<script src="./app.js"></script>
+</body>
+</html>
